@@ -1,0 +1,23 @@
+---
+title: "Chapter 1 Introduction"
+author: "Nate Olson"
+date: "December 29, 2015"
+output: html_document
+---
+
+## Notes
+* Statistical learning - set of tools for understanding data,  
+    * Supervised - using statistical models to predict or estimate outputs based on a set of inputs  
+    * Unsupervised - evaluating relationships and data structure using only inputs  
+* Types of input and output  
+    * Categorical data -qualitative  
+    * Continuous data - quantitative  
+* book based on four premises  
+    1. Statistical learning methods broadly applicable  
+    2. Statistical learning not a set of black boxes  
+    3. Important to understand methods, not necessarily be able to construct methods  
+    4. Application of statistical learning to real-world problems  
+* See pages 9 - 12 for information on notation used in book  
+* Table 1.1 page 14 summaary of datasets used in book  
+
+

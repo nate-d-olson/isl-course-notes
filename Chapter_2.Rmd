@@ -1,0 +1,49 @@
+---
+title: "Chapter 2 Statistical Learning"
+author: "Nate Olson"
+date: "December 29, 2015"
+output: html_document
+---
+
+## Notes
+* Function 
+    * $Y=f(X) + \epsilon$  
+    * $\epsilon$ - error term
+    * $Y$ - dependent variable  
+    * $X$ - independent variable    
+    * Statistical learning is a set of methods for estimating $f$  
+* $f$ is used to make predictions and inferences based on a set of input variables  
+* Expected value  
+    * $E(Y-\hat{Y})^2 = E[f(X)+\epsilon - \hat{f}(X)]^2 = [f(X)-\hat{f}(X)]^2 + Var(\epsilon)$  
+    * Reducible error - $[f(X)-\hat{f}(X)]^2$  
+    * Irreducible error - $Var(\epsilon)$  
+* Approaches for finding $\hat{f}$  
+    * parametric - two-step model based approach
+        1. make initial assumptions about functional form/ shape of $f$  
+        2. fit/ train model  
+        * common method
+
+
+### Definitions
+input variable
+: also refered to as _predictors_, _independent variables_, _features_, or _variables_.  
+
+output variables
+: also refered to as _response_, or _dependent variables_.  
+
+error term
+: proportion of data that cannot be explained by a model
+
+reducible error
+: component of error term that can be minimized with a better model  
+
+irreducible error
+: component of error that cannot be minimized with a better model, noise in data
+
+prediction
+: when output variables are not available, or hard to determine, for a set of input variables, in predictions $\hat{f}$ is commonly treated as a black box.  
+
+inference
+: understand how $Y$ is affected by $X$.  Types of questions; Which predictors are associated with a response?, What is the relationship between the reponse and each preductor?, Can the relationship between $Y$ and each predictor be adequately summarized using a linear equation, or is the relationship more complicated?  
+
+parametric:
