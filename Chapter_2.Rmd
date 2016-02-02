@@ -18,11 +18,38 @@ output: html_document
     * Reducible error - $[f(X)-\hat{f}(X)]^2$  
     * Irreducible error - $Var(\epsilon)$  
 * Approaches for finding $\hat{f}$  
-    * parametric - two-step model based approach
+    * parametric methods - two-step model based approach
         1. make initial assumptions about functional form/ shape of $f$  
-        2. fit/ train model  
-        * common method
-
+        2. fit/ train model - most common method least squares  
+        * flexible models are able to fit many different functions  
+        * overfitting - where the model is fit to errors in the data, risk when using overly flexible complex models
+    * Non-parametric methods - do not make assumptions regarding the form of $f$  
+        * example _thin-plate spline_, no imposed re-specified model, estimates $f$ as close as possible to observed data  
+* Trade-off between prediction accuracy and model interpretability
+    * in general higher accuracy models are less interpretable
+* Supervised vs. unsupervised learning
+    * supervised - labeled data 
+    * unsupervised - unlabeled data (clustering)
+* Regression vs. classification problems
+    * quantiative - numerical values, continuous
+    * qualitative - categorical
+    * regression - quantitative
+    * classification - qualitative
+* Assessing model accuracy  
+    * assessing quality of fit
+    * methods 
+        * Mean squared error 
+            * $MSE=\frac{1}{n}\sum_{i=1}^{n}{(y_i-\hat{f}(x_i))^2}$  
+            * assess for test and training data
+    * For smoothing spline degrees of freedom determine the flexibility of the model
+    * Cross-validation - use of test and training data to evaluate models  
+* Bias-Variance Trade-off
+    * unable to minimize both bias and variance
+    * reducing one leads to an increase in the other
+* Classification Accuracy
+    * error rate $=\frac{1}{n}\sum_{i=1}^{n}{I(y_i\neq\hat{y}_i)}$
+    * Bayes classifier - assign classification based on higher probablility
+    * K-nearest neighbors - assign classification based on classification of neighboring data points
 
 ### Definitions
 input variable
@@ -46,4 +73,16 @@ prediction
 inference
 : understand how $Y$ is affected by $X$.  Types of questions; Which predictors are associated with a response?, What is the relationship between the reponse and each preductor?, Can the relationship between $Y$ and each predictor be adequately summarized using a linear equation, or is the relationship more complicated?  
 
-parametric:
+parametric
+: statistical learning methods classification characterized by a two-step modeling approach
+
+### Lab
+Skip basic R into material
+
+### Exercises - Conceptual
+1. Flexible vs. inflexible model  
+    A. inflexible model, as large n with few parameter is easier to fit and a more flexible model is more likely to overfit the data  
+    B. flexible model as with few n and more parameters it is difficult to model an inflexible model unlikely to be able to accurately fit the data
+    C. flexible model as inflexible less likely to be able to fit complex non-linear relationship
+    D. infelxible model as flexible model likely to overfit the data due to the high variance  
+2. 
