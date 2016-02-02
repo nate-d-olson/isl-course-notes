@@ -1,0 +1,171 @@
+---
+title: "Chapter 3 Exercises"
+author: "Nate Olson"
+date: "February 2, 2016"
+output: html_document
+---
+```{r}
+library(MASS)
+library(ISLR)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(purrr)
+library(broom)
+library(ggplot2)
+```
+
+
+Applied
+8. 
+```{r}
+data("Auto")
+fit <- lm(mpg~horsepower, data = Auto)
+```
+
+```{r}
+summary(fit)
+```
+
+a.
+i - yes there is a relationship between the predictor and response
+ii - the replationship is significant
+iii - relationship is negative
+iv - predicted mpg
+```{r}
+pred_fit <- data_frame(horsepower = 95:105)
+pred_val <- predict(fit,interval = "prediction", newdata = pred_fit) %>% 
+    as.data.frame() %>%  bind_cols(pred_fit) %>% filter(horsepower == 98)
+pred_val 
+```
+note use of interval = "prediction" for 95% CI
+
+```{r}
+ggplot(Auto) + geom_point(aes(x = horsepower, y = mpg)) + 
+    geom_abline(aes(slope = fit$coefficients['horsepower'], 
+                    intercept = fit$coefficients['(Intercept)']))
+```
+
+Residuals and scale-location have u-shape, though the standardized residuals are normally distributed, leverage increases with Standardized residual values
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+#### 9
+A. Scatter plot with all Auto variables
+```{r}
+#library(GGally)
+#ggpairs(Auto)
+plot(Auto)
+```
+
+B. Calculate correlations between variables
+```{r}
+Auto %>% select(-name) %>% cor()
+```
+
+C. Fit regression to auto data without name
+```{r}
+fit <- lm(mpg~. - name, data = Auto)
+summary(fit)
+```
+
+There is a relationship, predictors origin, year, weight, and displacement have a significant effect. Year coefficient suggests that mgp is positively correlated with year.
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+Leverage plot outliers 327, 394, and 14
+
+E. Fitting models with interactions
+```{r}
+nameless_auto <- Auto %>% select(-name)
+fit <- lm(mpg~cylinders*displacement*horsepower*weight*acceleration*year + origin,
+          data = nameless_auto)
+summary(fit)
+```
+
+Did not test for interactions with origin as confounded with other variables creating sigularities. 
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+None of the interactions apprear significant when looking at all
+
+When decreasing the number of interactions more factors become significant.
+```{r}
+fit <- lm(mpg~cylinders*displacement*horsepower+weight+acceleration+year + origin,
+          data = nameless_auto)
+summary(fit)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+F. Testing different transformations
+```{r}
+fit <- lm(log(mpg)~.,
+          data = nameless_auto)
+summary(fit)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+log improves R^2, decreases smile in Resibule plot
+
+```{r}
+fit <- lm(sqrt(mpg)~.,
+          data = nameless_auto)
+summary(fit)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+sqrt btter fit but not as good as log
+
+```{r}
+
+fit <- lm(mpg^2~.,
+          data = nameless_auto)
+summary(fit)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+Log still the best.
+
+Looking at interactions again but with log transformation
+```{r}
+fit <- lm(mpg~I(log(cylinders))*I(log(displacement))*I(log(horsepower))*I(log(weight))*I(log(acceleration))*I(log(year)) + origin,
+          data = nameless_auto)
+summary(fit)
+```
+
+Did not test for interactions with origin as confounded with other variables creating sigularities. 
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+What is the difference between log transformation of y and x? Need to think about ....
