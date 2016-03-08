@@ -1,0 +1,12 @@
+---
+title: "R4DS - Robust Code"
+author: "Nate Olson"
+date: "February 11, 2016"
+output: html_document
+---
+
+Three common classes of surprises in R  
+1. Unstable types - not knowning what type of element something will return  
+2. Non-standard evaluation: a function will return a different value based on the argument type supplied  
+3. hidden arguments, stringAsFactor example  
+

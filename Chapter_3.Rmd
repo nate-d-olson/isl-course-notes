@@ -168,4 +168,75 @@ plot(fit)
 par(mfrow=c(1,1))
 ```
 
-What is the difference between log transformation of y and x? Need to think about ....
+10. 
+A. 
+```{r}
+fit <- lm(Sales~Price*Urban*US, data = Carseats)
+summary(fit)
+fit <- lm(Sales~Price+Urban+US, data = Carseats)
+summary(fit)
+```
+
+b. Interpretation of coefficients
+Intercept - sale of non-urban, non-US, cars with a sales price of 0
+Price - impact of price on non-urban and non-us car (fixed values), car sales decrease with increasing car price
+UrbanYes - For a fixed price there are few urban cars sold than non-urban
+USYes - For a fixed price and region more cars are sold in the US than non-US countries
+
+c. See notes
+d. Price, Urban, and US when not accounting for interactions, but only price when accounting for interactions.
+e. 
+```{r}
+fit <- lm(Sales~Price, data = Carseats)
+summary(fit)
+```
+f. 
+```{r}
+par(mfrow=c(2,2))
+plot(fit)
+par(mfrow=c(1,1))
+```
+
+```{r}
+ggplot(Carseats) + geom_point(aes(x = Price, y = Sales, color = Urban, shape = US)) + geom_abline(aes(intercept = fit$coefficients['(Intercept)'],slope = fit$coefficients['Price'] ))
+```
+
+h. Yes there is evidence of high leverage points and potentially outliers.
+
+11. 
+```{r}
+set.seed(1)
+x = rnorm(100)
+y = 2*x+rnorm(100)
+```
+
+a. 
+```{r}
+fit <- lm(y~x + 0)
+summary(fit)
+```
+
+How are they different 2X slope?
+For the two to be equal the slope should equal 1.
+
+b. 
+```{r}
+fit <- lm(y~x)
+summary(fit)
+```
+
+```{r}
+plot(x,y)
+abline(fit)
+```
+
+c. Very similar results except that slope is slightly less negative when allowing the intercept to not equal 0.
+
+d. to do work out math
+e. comparison of x~y and y~x
+```{r}
+fit <- lm(x~y)
+summary(fit)
+```
+
+12. 

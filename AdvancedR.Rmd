@@ -1,0 +1,78 @@
+---
+title: "Advanced R"
+author: "Nate Olson"
+date: "February 15, 2016"
+output: html_document
+---
+
+## Data Structures
+Quiz 
+1. three properties of a vector: type, attributes, length  
+2. four common types of atomic vectors: integer, double, boolean, character, two rare: complex and raw  
+3. attributes - metadata, attr(x, "y") or attr(x,"y") <- value, access attributes using attributes()    
+4. list and data frames can contain different types of data, vectors and matricies can only contain one data type
+5. a list can contain a data frame as an element, a data frame cannot have a matrix as a column - can make a list array, data frame column as a matrix using df$x <- matrix() or I() such as data.frame(x = I(matrix()))
+
+## Targeted reading
+* Complex and raw vectors  
+### list array  
+* apply dimensions to a list to generate a list array
+```{r}
+l <- list(1:3, "a", TRUE, 1.0)
+l
+dim(l) <- c(2,2)
+l
+```
+Good when you need to arrage a list in a grid like structure
+
+### Special Columns
+list
+```{r}
+df <- data.frame(x = 1:3)
+df$y = list(1:2, 1:3, 1:4)
+df
+```
+
+Using `I()` which add the `AsIs` class
+```{r}
+dfl <- data.frame(x = 1:3, y = I(list(1:2, 1:3, 1:4)))
+dfl
+```
+
+Can have columns that are matrix or arrays as long as the number of rows are equal
+```{r}
+dfm <- data.frame(x = 1:3, y = I(matrix(1:9, nrow = 3)))
+dfm
+```
+
+
+## Subsetting 
+Quiz  
+1. Subsetting with:   
+    * Positive integer - selects elements  
+    * Negative integer - remove elements  
+    * logical vector - selects (TRUE), removes (FALSE) based on positions  
+    * character vector - selects based on names  
+2. `[` when applied to a list - sublist, `[[` sublist element, `$` sublist element by name  
+3. use drop = FALSE when you want to maintain dimensions  
+4. x[] <- fills all positions with 0, whereas x <- 0 assigns x to 0  
+5. relabel categorical variables - lookup table, apply?  
+
+### Lookup tables
+```{r}
+x <- c("m","f","u","f","f","m","m")
+lookup <- c(m = "male", f = "female", u = NA)
+unname(lookup[x])
+c(m = "Known",f = "Known", u = "Unknown")[x]
+```
+
+## Functions
+Quiz
+1. three components of a function: name, arguments, body  
+2. 11  
+3. 1 + 2*3  
+4. x <- c(1:10); mean(x, na.rm = TRUE)
+5. no b is not evaluated  
+6. infix function - between arguments; `% %` <- function(x,y){}, replacement function `name<-` 7. cleanup - on.exit()  
+
+## OO field Guide

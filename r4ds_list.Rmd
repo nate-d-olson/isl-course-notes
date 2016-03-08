@@ -1,0 +1,204 @@
+---
+title: "R4-DataSci-Lists"
+author: "Nate Olson"
+date: "February 10, 2016"
+output: html_document
+---
+
+## List Basics
+named list
+```{r}
+x_named <- list(a = 1, b = 2, c =3)
+str(x_named)
+```
+
+list structures
+```{r}
+x1 <- list(c(1,2),c(3,4))
+str(x1)
+x2 <- list(list(1,2), list(3,4))
+str(x2)
+x3 <- list(1, list(2, list(3)))
+str(x3)
+
+```
+
+subsetting `[]` extracts a sublist and `[[]]` extracts the sublist value, can access using `$`, same as `[[]]`
+
+```{r}
+df <- data.frame(a = 1:10, b = 21:30)
+df["a"]
+df[["a"]]
+df$a
+```
+
+Generation of a multipurpose column summary function
+```{r}
+col_summary <- function(df, fun) {
+  out <- vector("numeric", length(df))
+  for (i in seq_along(df)) {
+    out[i] <- fun(df[[i]])
+  }
+  out
+}
+col_summary(df, median)
+col_summary(df, min)
+```
+
+Note the use of a function as an argument within a function
+
+### Purrr
+map function
+list of map functions and output type
+use the most specific map function, only use map() as a fallback
+map arguments
+1. list
+2. function, character vector, or an integer vector
+3. other arguments passed to the function everytime its called
+
+map preserves names
+
+Shortcuts
+- splitting a dataframe
+```{r}
+library(purrr)
+models <- mtcars %>% 
+    split(.$cyl) %>% 
+    map(function(df) lm(mpg~wt, data = df))
+```
+
+can replace `function(df) lm(mpg~wt, data = df)` with `~lm(mpg~wt, data = .)` for anonymous functions  
+
+`.` used to represent current, .x and .y represent the first and second arguments.  
+
+Extracting named components
+```{r}
+models %>% 
+  map(summary) %>% 
+  map_dbl(~.$r.squared)
+```
+
+
+Extracting named components directly
+```{r}
+models %>% 
+  map(summary) %>% 
+  map_dbl("r.squared")
+```
+
+numeric vector to extract elements 
+```{r}
+x <- list(list(1, 2, 3), list(4, 5, 6), list(7, 8, 9))
+x %>% map_dbl(2)
+```
+
+Base R
+lapply identical to map
+apply simplifies output
+vapply similar to apply but able to specify the output format 
+
+### Handling Hierarchy
+* extract with map and vector
+* remove level using flatten
+* flip with transpose
+
+
+Transpose flipping a list inside out
+```{r}
+x <- list(
+  x = list(a = 1, b = 3, c = 5),
+  y = list(a = 2, b = 4, c = 6)
+)
+x %>% str()
+x %>% transpose() %>% str()
+```
+
+### dealing with failure
+`safely()` - takes a function does not return an error, returns list with result, and error (NULL if successful)
+
+can transpose the output to get a list of errors
+
+`possibly()` - similar to safely but always suceeds, returns a default value for a failure
+
+Parallel maps
+map2 - two lists
+pmap() - takes a list of arguments
+```{r}
+library(purrr)
+library(dplyr)
+n <- list(1, 3, 5)
+mu <- list(5, 10, -3)
+sigma <- list(1, 5, 10)
+args1 <- list(n, mu, sigma)
+args1 %>% pmap(rnorm) %>% str()
+```
+
+Can store arguments in a data frame
+```{r}
+params <- dplyr::data_frame(mean = mu, sd = sigma, n = n)
+params$result <- params %>% pmap(rnorm)
+params
+```
+
+Covers intersection of dplyr and purrr in model fitting
+
+### Invoking different functions
+```{r}
+f <- c("runif", "rnorm", "rpois")
+param <- list(
+  list(min = -1, max = 1), 
+  list(sd = 5), 
+  list(lambda = 10)
+)
+invoke_map(f, param, n = 5)
+```
+
+note here `n = 5` is passed with '...' to all functions
+
+`frame_data` can be used to create matching pairs
+```{r}
+sim <- dplyr::frame_data(
+  ~f,      ~params,
+  "runif", list(min = -1, max = -1),
+  "rnorm", list(sd = 5),
+  "rpois", list(lambda = 10)
+)
+sim %>% dplyr::mutate(
+  samples = invoke_map(f, params, n = 10)
+)
+```
+
+### Walk
+used when interested in side effects not return values, saving to disk or rendering output.
+
+```{r}
+x <- list(1, "a", 3)
+
+x2 <- x %>% 
+  walk(print)
+x2
+```
+
+Saving plots to disk
+```{r}
+library(ggplot2)
+plots <- mtcars %>% 
+  split(.$cyl) %>% 
+  map(~ggplot(., aes(mpg, wt)) + geom_point())
+paths <- paste0(names(plots), ".pdf")
+
+pwalk(list(paths, plots), ggsave, path = ".")
+```
+
+### Predicates
+functions that return a TRUE/ FALSE
+`keep` and `discard` work with predicates filters list
+`head_while` and `tail_while` keep first and last element until first predicate is true  
+`some()` predicate true for any element
+`every()` predicate is true for all elements  
+`detect()` and `detect_index()`  
+
+Purrr predicate functions
+`is_logical`, `is_integer`, `is_double`, `is_numeric`, `is_character`, `is_atomic`, `is_list`, `is_vector`, `is_null`
+
+
